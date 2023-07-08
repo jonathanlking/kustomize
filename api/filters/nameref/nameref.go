@@ -292,6 +292,18 @@ func prefixSuffixEquals(other resource.ResCtx) sieveFunc {
 	}
 }
 
+func prefixEquals(other resource.ResCtx) sieveFunc {
+	return func(r *resource.Resource) bool {
+          return r.PrefixesSuffixesEquals(other)
+	}
+}
+
+func suffixEquals(other resource.ResCtx) sieveFunc {
+	return func(r *resource.Resource) bool {
+          return r.PrefixesSuffixesEquals(other)
+	}
+}
+
 func (f Filter) sameCurrentNamespaceAsReferrer() sieveFunc {
 	referrerCurId := f.Referrer.CurId()
 	if referrerCurId.IsClusterScoped() {

@@ -317,6 +317,14 @@ func (r *Resource) PrefixesSuffixesEquals(o ResCtx) bool {
 //              (eitherSuffixEmpty || utils.SameEndingSubSlice(r.GetNameSuffixes(), o.GetNameSuffixes()))
 }
 
+func (r *Resource) PrefixesEquals(o ResCtx) bool {
+        return utils.SameEndingSubSlice(r.GetNamePrefixes(), o.GetNamePrefixes())
+}
+
+func (r *Resource) SuffixesEquals(o ResCtx) bool {
+        return utils.SameEndingSubSlice(r.GetNameSuffixes(), o.GetNameSuffixes())
+}
+
 // RemoveBuildAnnotations removes annotations created by the build process.
 // These are internal-only to kustomize, added to the data pipeline to
 // track name changes so name references can be fixed.
