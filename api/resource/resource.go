@@ -293,9 +293,9 @@ func (r *Resource) getCsvAnnotation(name string) []string {
 // PrefixesSuffixesEquals is conceptually doing the same task
 // as OutermostPrefixSuffix but performs a deeper comparison
 // of the suffix and prefix slices.
-func (r *Resource) PrefixesSuffixesEquals(o ResCtx) bool {
-//  eitherPrefixEmpty := len(r.GetNamePrefixes()) == 0 || len(o.GetNamePrefixes()) == 0
-//  eitherSuffixEmpty := len(r.GetNameSuffixes()) == 0 || len(o.GetNameSuffixes()) == 0
+func (r *Resource) PrefixesSuffixesEquals(o ResCtx, allowEmpty bool) bool {
+  eitherPrefixEmpty := len(r.GetNamePrefixes()) == 0 || len(o.GetNamePrefixes()) == 0
+  eitherSuffixEmpty := len(r.GetNameSuffixes()) == 0 || len(o.GetNameSuffixes()) == 0
 
         fmt.Fprintln(os.Stderr, "rrrr")
         fmt.Printf("%v\n", r)
@@ -310,11 +310,14 @@ func (r *Resource) PrefixesSuffixesEquals(o ResCtx) bool {
         fmt.Printf("%v\n", r.GetNameSuffixes())
         fmt.Printf("%v\n", o.GetNameSuffixes())
         fmt.Printf("%v\n", utils.SameEndingSubSlice(r.GetNameSuffixes(), o.GetNameSuffixes()))
+  if (allowEmpty) {
 
+       return (eitherPrefixEmpty || utils.SameEndingSubSlice(r.GetNamePrefixes(), o.GetNamePrefixes())) &&
+              (eitherSuffixEmpty || utils.SameEndingSubSlice(r.GetNameSuffixes(), o.GetNameSuffixes()))
+  } else {
         return utils.SameEndingSubSlice(r.GetNamePrefixes(), o.GetNamePrefixes()) &&
                 utils.SameEndingSubSlice(r.GetNameSuffixes(), o.GetNameSuffixes())
-//       return (eitherPrefixEmpty || utils.SameEndingSubSlice(r.GetNamePrefixes(), o.GetNamePrefixes())) &&
-//              (eitherSuffixEmpty || utils.SameEndingSubSlice(r.GetNameSuffixes(), o.GetNameSuffixes()))
+              }
 }
 
 func (r *Resource) PrefixesEquals(o ResCtx) bool {

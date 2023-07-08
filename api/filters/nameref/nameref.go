@@ -284,23 +284,11 @@ func (f Filter) roleRefFilter() sieveFunc {
 	return previousIdSelectedByGvk(roleRefGvk)
 }
 
-func prefixSuffixEquals(other resource.ResCtx) sieveFunc {
+func prefixSuffixEquals(other resource.ResCtx, allowEmpty bool) sieveFunc {
 	return func(r *resource.Resource) bool {
-          x := r.PrefixesSuffixesEquals(other)
+          x := r.PrefixesSuffixesEquals(other, allowEmpty)
           fmt.Printf("**: %v\n", x)
           return x
-	}
-}
-
-func prefixEquals(other resource.ResCtx) sieveFunc {
-	return func(r *resource.Resource) bool {
-          return r.PrefixesSuffixesEquals(other)
-	}
-}
-
-func suffixEquals(other resource.ResCtx) sieveFunc {
-	return func(r *resource.Resource) bool {
-          return r.PrefixesSuffixesEquals(other)
 	}
 }
 
@@ -339,9 +327,16 @@ func (f Filter) selectReferral(
 	if len(candidates) == 1 {
 		return candidates[0], nil
 	}
+
+        // First try with a less strict approach, allowing empty
+        // if this gives more than one result then we need to be more strict
+
         fmt.Printf("1: %v\n", candidates)
-	candidates = doSieve(candidates, prefixSuffixEquals(f.Referrer))
+	candidates = doSieve(candidates, prefixSuffixEquals(f.Referrer, true))
         fmt.Printf("2: %v\n", candidates)
+	if len(candidates) > 1 {
+          candidates = doSieve(candidates, prefixSuffixEquals(f.Referrer, false))
+        }
         fmt.Printf("2.5: %v\n", len(candidates))
 	if len(candidates) == 1 {
 		return candidates[0], nil
