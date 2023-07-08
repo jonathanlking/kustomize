@@ -286,7 +286,9 @@ func (f Filter) roleRefFilter() sieveFunc {
 
 func prefixSuffixEquals(other resource.ResCtx) sieveFunc {
 	return func(r *resource.Resource) bool {
-		return r.PrefixesSuffixesEquals(other)
+          x := r.PrefixesSuffixesEquals(other)
+          fmt.Printf("**: %v\n", x)
+          return x
 	}
 }
 
@@ -325,17 +327,23 @@ func (f Filter) selectReferral(
 	if len(candidates) == 1 {
 		return candidates[0], nil
 	}
+        fmt.Printf("1: %v\n", candidates)
 	candidates = doSieve(candidates, prefixSuffixEquals(f.Referrer))
+        fmt.Printf("2: %v\n", candidates)
+        fmt.Printf("2.5: %v\n", len(candidates))
 	if len(candidates) == 1 {
 		return candidates[0], nil
 	}
+        fmt.Printf("Step 3\n")
 	if len(candidates) == 0 {
 		return nil, nil
 	}
+        fmt.Printf("4")
 	if candidatesIdentical(candidates) {
 		// Just take the first one.
 		return candidates[0], nil
 	}
+        fmt.Printf("5")
 	ids := getIds(candidates)
 	return nil, fmt.Errorf("found multiple possible referrals: %s\n%s", ids, f.failureDetails(candidates))
 }

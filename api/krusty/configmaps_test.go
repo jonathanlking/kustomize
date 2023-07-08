@@ -650,7 +650,6 @@ nameSuffix: api
 
 	m := th.Run(".", th.MakeDefaultOptions())
 	th.AssertActualEqualsExpected(m, `
-apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: a-api

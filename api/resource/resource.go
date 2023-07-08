@@ -18,6 +18,7 @@ import (
 	kyaml "sigs.k8s.io/kustomize/kyaml/yaml"
 	"sigs.k8s.io/yaml"
 )
+import "os"
 
 // Resource is an RNode, representing a Kubernetes Resource Model object,
 // paired with metadata used by kustomize.
@@ -157,7 +158,9 @@ func (r *Resource) DeepCopy() *Resource {
 // the resource.
 // TODO: move to RNode, use GetMeta to improve performance.
 // TODO: make a version of mergeStringMaps that is build-annotation aware
-//   to avoid repeatedly setting refby and genargs annotations
+//
+//	to avoid repeatedly setting refby and genargs annotations
+//
 // Must remove the kustomize bit at the end.
 func (r *Resource) CopyMergeMetaDataFieldsFrom(other *Resource) error {
 	if err := r.SetLabels(
@@ -291,11 +294,27 @@ func (r *Resource) getCsvAnnotation(name string) []string {
 // as OutermostPrefixSuffix but performs a deeper comparison
 // of the suffix and prefix slices.
 func (r *Resource) PrefixesSuffixesEquals(o ResCtx) bool {
-	eitherPrefixEmpty := len(r.GetNamePrefixes()) == 0 || len(o.GetNamePrefixes()) == 0
-	eitherSuffixEmpty := len(r.GetNameSuffixes()) == 0 || len(o.GetNameSuffixes()) == 0
+//  eitherPrefixEmpty := len(r.GetNamePrefixes()) == 0 || len(o.GetNamePrefixes()) == 0
+//  eitherSuffixEmpty := len(r.GetNameSuffixes()) == 0 || len(o.GetNameSuffixes()) == 0
 
-	return (eitherPrefixEmpty || utils.SameEndingSubSlice(r.GetNamePrefixes(), o.GetNamePrefixes())) &&
-		(eitherSuffixEmpty || utils.SameEndingSubSlice(r.GetNameSuffixes(), o.GetNameSuffixes()))
+        fmt.Fprintln(os.Stderr, "rrrr")
+        fmt.Printf("%v\n", r)
+        fmt.Fprintln(os.Stderr, "oooo")
+        fmt.Printf("%v\n", o)
+        fmt.Fprintln(os.Stderr, "Prefixes")
+        fmt.Printf("%v\n", r.GetNamePrefixes())
+        fmt.Printf("%v\n", o.GetNamePrefixes())
+        fmt.Printf("%v\n", utils.SameEndingSubSlice(r.GetNamePrefixes(), o.GetNamePrefixes()))
+
+        fmt.Fprintln(os.Stderr, "Suffixes")
+        fmt.Printf("%v\n", r.GetNameSuffixes())
+        fmt.Printf("%v\n", o.GetNameSuffixes())
+        fmt.Printf("%v\n", utils.SameEndingSubSlice(r.GetNameSuffixes(), o.GetNameSuffixes()))
+
+        return utils.SameEndingSubSlice(r.GetNamePrefixes(), o.GetNamePrefixes()) &&
+                utils.SameEndingSubSlice(r.GetNameSuffixes(), o.GetNameSuffixes())
+//       return (eitherPrefixEmpty || utils.SameEndingSubSlice(r.GetNamePrefixes(), o.GetNamePrefixes())) &&
+//              (eitherSuffixEmpty || utils.SameEndingSubSlice(r.GetNameSuffixes(), o.GetNameSuffixes()))
 }
 
 // RemoveBuildAnnotations removes annotations created by the build process.
