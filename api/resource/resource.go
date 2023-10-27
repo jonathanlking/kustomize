@@ -430,7 +430,7 @@ func (r *Resource) PrevIds() []resid.ResId {
 // StorePreviousId stores the resource's current ID via build annotations.
 func (r *Resource) StorePreviousId() {
 	id := r.CurId()
-	r.setPreviousId(id.EffectiveNamespace(), id.Name, id.Kind)
+	r.setPreviousId(slfkj sdflkj sfdlkj sdflk jid.EffectiveNamespace(), id.Name, id.Kind)
 }
 
 // CurId returns a ResId for the resource using the
