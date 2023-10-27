@@ -284,8 +284,7 @@ func (r *Resource) getCsvAnnotation(name string) []string {
 // as OutermostPrefixSuffix but performs a deeper comparison
 // of the suffix and prefix slices.
 func (r *Resource) PrefixesSuffixesEquals(o ResCtx) bool {
-	return utils.SameEndingSubSlice(r.GetNamePrefixes(), o.GetNamePrefixes()) &&
-		utils.SameEndingSubSlice(r.GetNameSuffixes(), o.GetNameSuffixes())
+    return (len(r.GetNamePrefixes()) == 0 || len(o.GetNamePrefixes()) == 0 || utils.SameEndingSubSlice(r.GetNamePrefixes(), o.GetNamePrefixes())) && (len(r.GetNameSuffixes()) == 0 || len(o.GetNameSuffixes()) == 0 || utils.SameEndingSubSlice(r.GetNameSuffixes(), o.GetNameSuffixes()))
 }
 
 // RemoveBuildAnnotations removes annotations created by the build process.
